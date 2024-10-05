@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.container {
+    max-width: 400px;
+    margin: auto;
+}
+
+input {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+}
+
+button {
+    padding: 10px;
+}
+
+#messages {
+    margin: 10px 0;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+.employee {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+  </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Management</h1>
+        <form id="employeeForm">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="text" id="profession" placeholder="Profession" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <button type="submit">Add Employee</button>
+        </form>
+        <div id="messages"></div>
+        <h2>Added Employees</h2>
+        <div id="employeeList"></div>
+    </div>
+    <script>let employees = [];
+        let idCounter = 1;
+        
+        document.getElementById('employeeForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            addEmployee();
+        });
+        
+        function addEmployee() {
+            const name = document.getElementById('name').value.trim();
+            const profession = document.getElementById('profession').value.trim();
+            const age = document.getElementById('age').value.trim();
+        
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = ''; // Clear previous messages
+        
+            if (!name || !profession || !age) {
+                showMessage('All fields are required!', 'error');
+                return;
+            }
+        
+            const employee = {
+                id: idCounter++,
+                name: name,
+                profession: profession,
+                age: age
+            };
+            
+            employees.push(employee);
+            renderEmployees();
+            showMessage('Employee added successfully!', 'success');
+            document.getElementById('employeeForm').reset();
+        }
+        
+        function renderEmployees() {
+            const employeeListDiv = document.getElementById('employeeList');
+            employeeListDiv.innerHTML = ''; // Clear previous list
+        
+            employees.forEach(employee => {
+                const employeeDiv = document.createElement('div');
+                employeeDiv.className = 'employee';
+                employeeDiv.innerHTML = `${employee.name}, ${employee.profession}, ${employee.age} 
+                    <button onclick="deleteEmployee(${employee.id})">Delete</button>`;
+                employeeListDiv.appendChild(employeeDiv);
+            });
+        }
+        
+        function deleteEmployee(id) {
+            employees = employees.filter(employee => employee.id !== id);
+            renderEmployees();
+        }
+        
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = message;
+            messagesDiv.className = type === 'error' ? 'error' : 'success';
+        }
+        </script>
+</body>
+</html>
